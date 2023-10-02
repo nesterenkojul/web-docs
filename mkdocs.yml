@@ -1,0 +1,7 @@
+site_name: Web Programming 23-24
+plugins:
+    - mkdocs-video
+nav:
+  - 'Главная': 'index.md'
+  - 'ЛР 1': '1.md'
+  - 'ЛР 2': '2.md'
