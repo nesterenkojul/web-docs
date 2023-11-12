@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>ЛР 2 - Web Programming 23-24</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Web Programming 23-24</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Главная</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../1/" class="nav-link">ЛР 1</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">ЛР 2</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">ЛР 3 <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../3/description/" class="dropdown-item">Описание</a>
+</li>
+                                    
+<li>
+    <a href="../3/endpoints/" class="dropdown-item">Эндпоинты</a>
+</li>
+                                    
+<li>
+    <a href="../3/authorization/" class="dropdown-item">Авторизация</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a rel="prev" href="../1/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../3/description/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#p-2-django" class="nav-link">ЛP 2. Реализация простого сайта средствами Django</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#1" class="nav-link">Вариант 1. Список отелей</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#modelspy" class="nav-link">Описание моделей (models.py)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#viewspy" class="nav-link">Описание контроллеров (views.py)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#urlspy" class="nav-link">Описание роутеров (urls.py)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Работа программы</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_2" class="nav-link">Выводы</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<div><h1 id="p-2-django">ЛP 2. Реализация простого сайта средствами Django</h1>
+<p><br>
+<br></p>
+<h2 id="1">Вариант 1. Список отелей</h2>
+<p>Необходимо учитывать название отеля, владельца отеля, адрес, описание, типы
+номеров, стоимость, вместимость, удобства.
+Необходимо реализовать следующий функционал:
+- Регистрация новых пользователей.
+- Просмотр и резервирование номеров. Пользователь должен иметь
+возможность редактирования и удаления своих резервирований.
+- Написание отзывов к номерам. При добавлении комментариев, должны
+сохраняться период проживания, текст комментария, рейтинг (1-10),
+информация о комментаторе.
+- Администратор должен иметь возможность заселить пользователя в отель и
+выселить из отеля средствами Django-admin.
+- В клиентской части должна формироваться таблица, отображающая
+постояльцев отеля за последний месяц.
+<br>
+<br></p>
+<h2 id="modelspy">Описание моделей (models.py)</h2>
+<p><strong>Пользователь (Гость)</strong> - основан на абстрактной модели базового пользователя Django.</p>
+<pre><code>class Guest(AbstractUser):
+    country = models.CharField(max_length=30)
+    photo = models.ImageField(blank=True, default='user.svg')
+
+    REQUIRED_FIELDS = []
+    objects = GuestManager()
+
+    @property
+    def bookings(self):
+        return Booking.objects.filter(guest=self)
+</code></pre>
+<p><br></p>
+<p><strong>Отель</strong></p>
+<pre><code>class Hotel(models.Model):
+    name = models.CharField(max_length=100)
+    owner = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
+    thumbnail = models.ImageField()
+    description = models.TextField(blank=True, null=True)
+
+    @property
+    def rooms(self):
+        return Room.objects.filter(hotel=self)
+
+    @property
+    def guests(self):
+        guestlist = []
+        for room in self.rooms:
+            guestlist.extend(room.get_last_month_guests())
+        return list(set(guestlist))
+</code></pre>
+<p><br></p>
+<p><strong>Комната</strong> - имеет внешний ключ, относящийся к Отелю.</p>
+<pre><code>class Room(models.Model):
+    type_CH = ('Apartment', 'Dormitory', 'Standard', 'Suite', 'Deluxe', 'Superior')
+    type = models.CharField(choices=zip(type_CH, type_CH), max_length=10)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    capacity = models.PositiveSmallIntegerField(validators=(MinValueValidator(1), MaxValueValidator(10)))
+    thumbnail = models.ImageField()
+    comm_CH = ('Bathroom', 'Swimming pool', 'Parking',
+               'Wi-Fi', 'Air conditioner', 'Room service',
+               'Breakfast', 'Balcony', 'Refrigerator')
+    commodities = MultiSelectField(choices=zip(comm_CH, comm_CH), max_choices=9, max_length=300)
+    price = models.DecimalField(decimal_places=2, max_digits=8, validators=[MinValueValidator(0)])
+
+    @property
+    def reviews(self):
+        bookings = Booking.objects.filter(room=self)
+        return Review.objects.filter(booking__in=bookings)
+
+    def available(self, start, end):
+        start = datetime.date.fromisoformat(start)
+        end = datetime.date.fromisoformat(end)
+        bookings = (Booking.objects.filter(room=self, status='Active') |
+                    Booking.objects.filter(room=self, status='Awaits'))
+        for book in bookings:
+            if ((start &lt;= book.date_from and end &gt;= book.date_until) or
+                    (book.date_from &lt;= start &lt;= book.date_until) or
+                    (book.date_from &lt;= end &lt;= book.date_until)):
+                return False
+        return True
+
+    def get_last_month_guests(self):
+        today = datetime.date.today()
+        month_before = today - datetime.timedelta(days=30)
+        bookings = Booking.objects.filter(room=self, date_until__range=[month_before, today])
+        return [b.guest for b in bookings]
+</code></pre>
+<p><br></p>
+<p><strong>Бронирование</strong> - имеет внешние ключи, относящиеся к Гостю и Комнате.</p>
+<pre><code>class Booking(models.Model):
+    guest = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    status_CH = ('Active', 'Awaits', 'Finished', 'Canceled')
+    status = models.CharField(choices=zip(status_CH, status_CH), max_length=10)
+    date_from = models.DateField()
+    date_until = models.DateField()
+
+    @property
+    def total_price(self):
+        days = (self.date_until - self.date_from).days
+        days = days if days != 0 else 1
+        return self.room.price * days
+</code></pre>
+<p><br></p>
+<p><strong>Отзыв</strong> - имеет внешний ключ, относящийся к Бронированию.</p>
+<pre><code>class Review(models.Model):
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    rating_CH = ('1', '2', '3', '4', '5')
+    rating = models.CharField(choices=zip(rating_CH, rating_CH), max_length=1)
+    body = models.TextField()
+</code></pre>
+<p><br>
+<br></p>
+<h2 id="viewspy">Описание контроллеров (views.py)</h2>
+<p><strong>index</strong> - рендерит основную страницу со списком всех отелей.</p>
+<pre><code>def index(request):
+    try:
+        h = Hotel.objects.order_by('name')
+    except Hotel.DoesNotExist:
+        raise Http404("No hotels available")
+    data = {'hotel_list': h}
+    return render(request, 'index.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>hotel</strong> - рендерит страницу отеля с укзанным id.</p>
+<pre><code>def hotel(request, id):
+    try:
+        h = Hotel.objects.get(pk=id)
+    except Hotel.DoesNotExist:
+        raise Http404("Cannot find this hotel")
+    try:
+        rl = Room.objects.filter(hotel=h)
+    except Room.DoesNotExist:
+        rl = []
+    data = {'hotel': h,
+            'room_list': rl,
+            'guest_list': h.guests}
+    return render(request, 'hotel.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>room</strong> - рендерит страницу комнаты с укзанным id (также содержит логику создания бронирования).</p>
+<pre><code>def room(request, id):
+try:
+    r = Room.objects.get(pk=id)
+except Room.DoesNotExist:
+    raise Http404("Cannot find this room")
+if request.method == 'POST':
+    u = request.user
+    d_f = request.POST.get('from')
+    d_u = request.POST.get('until')
+    if d_f &gt; d_u:
+        messages.info(request, 'Departure should be later than Arrival')
+    elif not r.available(d_f, d_u):
+        messages.info(request, 'Room is booked for these days')
+    else:
+        post_data = {'guest': u, 'room': r, 'date_from': d_f, 'date_until': d_u, 'status': 'Awaits'}
+        f = BookingCreationForm(post_data)
+        f.save()
+        return redirect('/account')
+
+data = {'room': r}
+return render(request, 'room.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>cancelbooking</strong> - изменение статуса бронирования с укзанным id на "Отменено" (доступ только для авторизированных пользователей).</p>
+<pre><code>@login_required(login_url='login')
+def cancelbooking(request, id):
+    try:
+        b = Booking.objects.get(pk=id)
+    except Booking.DoesNotExist:
+        raise Http404("Cannot find this booking")
+    if b.guest != request.user:
+        raise HttpResponseNotAllowed("Only user who made the booking can cancel it")
+    b.status = 'Canceled'
+    b.save(update_fields=['status'])
+    return redirect('/account')
+</code></pre>
+<p><br></p>
+<p><strong>review</strong> - оставить отзыв на бронирование с укзанным id (доступ только для авторизированных пользователей, кому принадлежит бронирование).</p>
+<pre><code>@login_required(login_url='login')
+def review(request, booking_id):
+    try:
+        b = Booking.objects.get(pk=booking_id)
+    except Booking.DoesNotExist:
+        raise Http404("Cannot find this booking")
+    if b.guest != request.user:
+        raise HttpResponseNotAllowed("Only user who made the booking can review it")
+    r = request.POST.get('rating')
+    bod = request.POST.get('body')
+    post_data = {'booking': b, 'rating': r, 'body': bod}
+    f = ReviewCreationForm(post_data)
+    f.save()
+    return redirect('/account')
+</code></pre>
+<p><br></p>
+<p><strong>register_page</strong> - производит регистрацию пользователя и рендерит ее страницу.</p>
+<pre><code>def register_page(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    f = GuestCreationForm()
+
+    if request.method == 'POST':
+        f = GuestCreationForm(request.POST, request.FILES)
+        try:
+            f.save()
+            return redirect('login')
+        except ValueError:
+            for err in dict(f.errors).values():
+                messages.info(request, err)
+
+    data = {'form': f}
+    return render(request, 'register.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>login_page</strong> - производит авторизацию пользователя и рендерит ее страницу.</p>
+<pre><code>def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+
+    if request.method == 'POST':
+        u = request.POST.get('username')
+        p = request.POST.get('password')
+        Guest = get_user_model()
+        try:
+            user = Guest.objects.get(username=u)
+            if check_password(p, user.password) or p == user.password:
+                login(request, user)
+                return redirect('/', user)
+            else:
+                messages.info(request, 'Incorrect password')
+        except Guest.DoesNotExist:
+            messages.info(request, 'Incorrect username')
+    return render(request, 'login.html')
+</code></pre>
+<p><br></p>
+<p><strong>logout_user</strong> - производит выход из аккаунта текущего пользователя.</p>
+<pre><code>@login_required(login_url='login')
+def logout_user(request):
+    logout(request)
+    return redirect('/')
+</code></pre>
+<p><br></p>
+<p><strong>account</strong> - рендерит страницу аккаунта текущего пользователя (доступ только для авторизированных пользователей).</p>
+<pre><code>@login_required(login_url='login')
+def account(request):
+    u = request.user
+    data = {'user': u}
+    return render(request, 'account.html', data)
+</code></pre>
+<p><br>
+<br></p>
+<h2 id="urlspy">Описание роутеров (urls.py)</h2>
+<p>Прописаны пути для каждого контроллера из файла views.py. Отдельно прописан путь до директории с медиа файлами (изображениями).</p>
+<pre><code>urlpatterns = [
+    path('', views.index),
+    path('hotel/&lt;id&gt;/', views.hotel, name='hotel'),
+    path('room/&lt;id&gt;/', views.room, name='room'),
+    path('cancelbooking/&lt;id&gt;/', views.cancelbooking, name='cancelbooking'),
+    path('review/&lt;booking_id&gt;/', views.review, name='review'),
+    path('account/', views.account, name='account'),
+    path('register/', views.register_page, name='register'),
+    path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_user, name='logout')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+</code></pre>
+<p><br></p>
+<p><br>
+<br></p>
+<h2 id="_1">Работа программы</h2>
+<p><strong>Главная страница</strong></p>
+<p><img alt="Index page" src="../media/index1.png">
+<img alt="Index page" src="../media/index2.png">
+<img alt="Index page" src="../media/index3.png"></p>
+<p><strong>Cтраница отеля</strong></p>
+<p><img alt="Hotel page" src="../media/hotel1.png">
+<img alt="Hotel page" src="../media/hotel2.png">
+<img alt="Hotel page" src="../media/hotel3.png"></p>
+<p><strong>Cтраница комнаты</strong></p>
+<p><img alt="Room page" src="../media/room1.png">
+<img alt="Room page" src="../media/room2.png">
+<img alt="Room page" src="../media/room3.png"></p>
+<p><strong>Cтраница пользователя</strong></p>
+<p><img alt="User page" src="../media/user1.png">
+<img alt="User page" src="../media/user2.png">
+<img alt="User page" src="../media/user3.png">
+<br>
+<br></p>
+<h2 id="_2">Выводы</h2>
+<p>В рамках данной лабораторной работы были получены навыки работы с веб-фреймворком Django. 
+Реализован простой сайт по варианту 1 - Список отелей.
+Познакомилась с моделью MVC и ее реализации в Django.<br>
+Разобралась со структурой Django-проекта; как взаимодействуют модели, контроллеры и роутеры.
+Дополнительно углубилась в создание user-friendly html-шаблонов для своего приложения.
+Полученные знания можно применять для создания собственных веб-приложений на Django.
+Более того, понимание модели MVC потенциально упрощает работу и с другими web-фреймворками.</p></div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
