@@ -39,6 +39,23 @@
                             <li class="navitem active">
                                 <a href="./" class="nav-link">ЛР 2</a>
                             </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">ЛР 3 <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../3/description/" class="dropdown-item">Описание</a>
+</li>
+                                    
+<li>
+    <a href="../3/endpoints/" class="dropdown-item">Эндпоинты</a>
+</li>
+                                    
+<li>
+    <a href="../3/authorization/" class="dropdown-item">Авторизация</a>
+</li>
+                                </ul>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav ml-auto">
@@ -48,7 +65,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" class="nav-link disabled">
+                                <a rel="next" href="../3/description/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -70,29 +87,29 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#p-1" class="nav-link">ЛP 1. Работа с сокетами</a>
+            <li class="nav-item" data-level="1"><a href="#p-2-django" class="nav-link">ЛP 2. Реализация простого сайта средствами Django</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#1" class="nav-link">Практическое задание 1</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#2" class="nav-link">Практическое задание 2</a>
+            <li class="nav-item" data-level="2"><a href="#1" class="nav-link">Вариант 1. Список отелей</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#3" class="nav-link">Практическое задание 3</a>
+            <li class="nav-item" data-level="2"><a href="#modelspy" class="nav-link">Описание моделей (models.py)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#4" class="nav-link">Практическое задание 4</a>
+            <li class="nav-item" data-level="2"><a href="#viewspy" class="nav-link">Описание контроллеров (views.py)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#5" class="nav-link">Практическое задание 5</a>
+            <li class="nav-item" data-level="2"><a href="#urlspy" class="nav-link">Описание роутеров (urls.py)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Выводы</a>
+            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Работа программы</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_2" class="nav-link">Выводы</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -103,516 +120,304 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<div><h1 id="p-1">ЛP 1. Работа с сокетами</h1>
+<div><h1 id="p-2-django">ЛP 2. Реализация простого сайта средствами Django</h1>
 <p><br>
 <br></p>
-<h2 id="1">Практическое задание 1</h2>
-<p>Реализовать клиентскую и серверную часть приложения. Клиент отсылает серверу
-сообщение «Hello, server». Сообщение должно отразиться на стороне сервера.
-Сервер в ответ отсылает клиенту сообщение «Hello, client». Сообщение должно
-отобразиться у клиента. Обязательно использовать библиотеку socket. Реализовать с помощью протокола UDP.
+<h2 id="1">Вариант 1. Список отелей</h2>
+<p>Необходимо учитывать название отеля, владельца отеля, адрес, описание, типы
+номеров, стоимость, вместимость, удобства.
+Необходимо реализовать следующий функционал:
+- Регистрация новых пользователей.
+- Просмотр и резервирование номеров. Пользователь должен иметь
+возможность редактирования и удаления своих резервирований.
+- Написание отзывов к номерам. При добавлении комментариев, должны
+сохраняться период проживания, текст комментария, рейтинг (1-10),
+информация о комментаторе.
+- Администратор должен иметь возможность заселить пользователя в отель и
+выселить из отеля средствами Django-admin.
+- В клиентской части должна формироваться таблица, отображающая
+постояльцев отеля за последний месяц.
 <br>
 <br></p>
-<p><strong>server.py</strong></p>
-<pre><code>import socket
+<h2 id="modelspy">Описание моделей (models.py)</h2>
+<p><strong>Пользователь (Гость)</strong> - основан на абстрактной модели базового пользователя Django.</p>
+<pre><code>class Guest(AbstractUser):
+    country = models.CharField(max_length=30)
+    photo = models.ImageField(blank=True, default='user.svg')
 
-
-# создаем сокет с семейством адресов IPv4 и использующим протокол UDP
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(("127.0.0.1", 20000))    # связываем сокет с хостом и портом
-data, addr = sock.recvfrom(2048)    # получаем n байт данных от клиента
-decoded_data = data.decode("utf-8")    # декодируем полученные данные
-print("Recieved message:", decoded_data)
-sock.sendto(b"Hello, client!", addr)    # посылаем ответ клиенту
-sock.close()
-</code></pre>
-<p><br></p>
-<p><strong>client.py</strong></p>
-<pre><code>import socket
-
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.connect(("127.0.0.1", 20000))  # подключаемся к сокету по указанному адресу
-sock.send(b"Hello, server!")    # отправляем сообщение серверу
-data = sock.recv(2048)    # получаем n байт данных от сервера
-decoded_data = data.decode("utf-8")    # декодируем полученные данные
-print("Recieved message:", decoded_data)
-sock.close()
-</code></pre>
-<p><br></p>
-<p><strong>Запуск</strong>
-<img alt="Task 1 code" src="../media/task1.png"></p>
-<p><br>
-<br></p>
-<h2 id="2">Практическое задание 2</h2>
-<p>Реализовать клиентскую и серверную часть приложения. Клиент запрашивает у
-сервера выполнение математической операции, параметры, которые вводятся с
-клавиатуры. Сервер обрабатывает полученные данные и возвращает результат
-клиенту. Вариант - a) Теорема Пифагора. Обязательно использовать библиотеку socket. 
-Реализовать с помощью протокола UDP.
-<br>
-<br></p>
-<p><strong>server.py</strong></p>
-<pre><code>import socket
-
-
-def calculate_hypotenuse(pair):
-    a, b = map(int, pair.split(' '))
-    c = (a**2 + b**2)**(1/2)
-    return str(c)
-
-
-# создаем сокет с семейством адресов IPv4 и использующим протокол TCP
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(("127.0.0.1", 20000))    # связываем сокет с хостом и портом
-sock.listen()
-connection, address = sock.accept()
-data = connection.recv(2048)    # получаем n байт данных от клиента
-decoded_data = data.decode("utf-8")    # декодируем полученные данные
-print("Recieved a and b lengths:", decoded_data)
-reply = calculate_hypotenuse(decoded_data).encode("utf-8")
-connection.send(reply)    # посылаем ответ клиенту
-connection.close()
-</code></pre>
-<p><br></p>
-<p><strong>client.py</strong></p>
-<pre><code>import socket
-
-
-print("Pythagoras Theorem Calculation")
-a, b = input("Enter leg a length: "), input("Enter leg b length: ")
-if (a + b).isdigit():
-    msg = (a + " " + b).encode("utf-8")
-else:
-    raise ValueError("Triangle legs lengths must be positive integers")
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(("127.0.0.1", 20000))  # подключаемся к сокету по указанному адресу
-sock.send(msg)    # отправляем сообщение серверу
-data = sock.recv(2048)    # получаем n байт данных от сервера
-decoded_data = data.decode("utf-8")    # декодируем полученные данные
-print("Hypotenuse c length:", decoded_data)
-sock.close()
-</code></pre>
-<p><br></p>
-<p><strong>Запуск</strong>
-<img alt="Task 2 code" src="../media/task2.png"></p>
-<p><br>
-<br></p>
-<h2 id="3">Практическое задание 3</h2>
-<p>Реализовать серверную часть приложения. Клиент подключается к серверу. В ответ
-клиент получает http-сообщение, содержащее html-страницу, которую сервер
-подгружает из файла index.html. Обязательно использовать библиотеку socket. 
-Реализовать с помощью протокола UDP.
-<br>
-<br></p>
-<p><strong>server.py</strong></p>
-<pre><code>import socket
-
-
-# создаем сокет с семейством адресов IPv4 и использующим протокол TCP
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(("127.0.0.1", 20000))    # связываем сокет с хостом и портом
-sock.listen()
-while True:
-    connection, address = sock.accept()
-    print("Connected to the client at", address)
-    data = connection.recv(2048)    # получаем n байт данных от клиента
-    decoded_data = data.decode("utf-8")    # декодируем полученные данные
-    print("Recieved message from client:", decoded_data)
-    with open("index.html") as index:
-        starting_line = "HTTP/1.1 200 OK \n"
-        headers = "Content-Type: text/html \n\n"
-        message_body = index.read()
-        response = (starting_line + headers + message_body).encode("utf-8")
-    connection.send(response)    # посылаем ответ клиенту
-    connection.close()
-</code></pre>
-<p><br></p>
-<p><strong>Запуск</strong>
-<img alt="Task 3 code" src="/media/task3.png"></p>
-<p><br>
-<br></p>
-<h2 id="4">Практическое задание 4</h2>
-<p>Реализовать двухпользовательский или многопользовательский чат. Реализация
-многопользовательского часа позволяет получить максимальное количество
-баллов. Реализовать с помощью протокола TCP.
-Обязательно использовать библиотеку threading.
-Для применения с TCP необходимо запускать клиентские подключения И прием
-и отправку сообщений всем юзерам на сервере в потоках. Не забудьте сохранять юзеров,
-чтобы потом отправлять им сообщения.
-<br>
-<br></p>
-<p><strong>server.py</strong></p>
-<pre><code>import socket
-from threading import Thread
-
-
-#   рассылка сообщений всем клиентам
-def send_all(msg):
-    global clients
-    for client in clients:
-        client.send(msg.encode("utf-8"))
-
-
-#   обработка сообщений одного клиента
-def handle(client):
-    global clients
-    while True:
-        try:
-            data = client.recv(2048)
-            if not data:
-                raise Exception
-            message = clients[client] + ': ' + data.decode("utf-8")
-            send_all(message)
-            print(message)
-        except:
-            name = clients[client]
-            del clients[client]
-            client.close()
-            send_all(f"{name} has left the chat")
-            print(f"{name} disconnected")
-            break
-
-
-#   первичное соединение с клиентом
-def connect():
-    global clients
-    while True:
-        client, address = sock.accept()
-        print(f"Connected to a client at {address}")
-
-        client.send(b'nickname')
-        data = client.recv(2048)
-        name = data.decode('utf-8')
-        clients[client] = name
-        print(f"Client at {address} has set a nickname: {name}")
-        send_all(f"{name} has joined the chat")
-        th = Thread(target=handle, args=(client,))
-        th.start()
-
-
-clients = dict()
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(("127.0.0.1", 20000))
-sock.listen()
-
-print("Chat server\nWaiting for users...")
-connect()
-</code></pre>
-<p><br></p>
-<p><strong>client.py</strong></p>
-<pre><code>import socket
-from threading import Thread
-
-
-#   получение сообщений
-def receive():
-    while True:
-        try:
-            data = sock.recv(2048)
-            message = data.decode("utf-8")
-            if message == 'nickname':
-                sock.send(name.encode("utf-8"))
-            else:
-                print(message)
-        except:
-            print(f"Oops! An error occurred. Try again later")
-            sock.close()
-            break
-
-
-#   отправка сообщений
-def respond():
-    while True:
-        try:
-            message = input()
-            sock.send(message.encode("utf-8"))
-        except Exception as e:
-            print(f"Oops! An error occurred. Try again later\nError details: {e}")
-            sock.close()
-            break
-
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(("127.0.0.1", 20000))
-
-name = input("Welcome to the chat.\nEnter your nickname: ")
-
-receive_th = Thread(target=receive)
-receive_th.start()
-respond_th = Thread(target=respond)
-respond_th.start()
-</code></pre>
-<p><br></p>
-<p><strong>Запуск</strong>
-<img alt="Task 4 code" src="../media/task4.png"></p>
-<p><br>
-<br></p>
-<h2 id="5">Практическое задание 5</h2>
-<p>Необходимо написать простой web-сервер для обработки GET и POST http
-запросов средствами Python и библиотеки socket.
-Задание - сделать сервер, который может:
-* Принять и записать информацию о дисциплине и оценке по дисциплине.
-* Отдать информацию обо всех оценах по дсициплине в виде html-страницы.
-<br>
-<br></p>
-<p><strong>server.py</strong></p>
-<pre><code>import socket
-import sys
-
-
-MAX_LINE = 64*1024
-MAX_HEADERS = 100
-
-
-class Request:
-    def __init__(self, method, url, version, headers, rfile):
-        self.method = method
-        self.url = url
-        self.version = version
-        self.headers = headers
-        self.rfile = rfile
-        self.body = self.set_body()
-
-    def set_body(self):
-        try:
-            size = int(self.headers.get('Content-Length'))
-        except:
-            return
-        body = self.rfile.read(size)
-        return str(body, 'iso-8859-1').strip()
+    REQUIRED_FIELDS = []
+    objects = GuestManager()
 
     @property
-    def path(self):
-        return self.url.split('?')[0] if '?' in self.url else self.url
+    def bookings(self):
+        return Booking.objects.filter(guest=self)
+</code></pre>
+<p><br></p>
+<p><strong>Отель</strong></p>
+<pre><code>class Hotel(models.Model):
+    name = models.CharField(max_length=100)
+    owner = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
+    thumbnail = models.ImageField()
+    description = models.TextField(blank=True, null=True)
 
     @property
-    def query(self):
-        if self.method == 'GET':
-            query_string = self.url.split('?')[1] if '?' in self.url else None
-        else:
-            query_string = self.body
-        if not query_string:
-            return
-        query_list = query_string.split('&amp;') if '&amp;' in query_string else [query_string]
-        query_pairs = [tuple(x.split('=')) for x in query_list]
-        return {key: val for key, val in query_pairs}
+    def rooms(self):
+        return Room.objects.filter(hotel=self)
 
+    @property
+    def guests(self):
+        guestlist = []
+        for room in self.rooms:
+            guestlist.extend(room.get_last_month_guests())
+        return list(set(guestlist))
+</code></pre>
+<p><br></p>
+<p><strong>Комната</strong> - имеет внешний ключ, относящийся к Отелю.</p>
+<pre><code>class Room(models.Model):
+    type_CH = ('Apartment', 'Dormitory', 'Standard', 'Suite', 'Deluxe', 'Superior')
+    type = models.CharField(choices=zip(type_CH, type_CH), max_length=10)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    capacity = models.PositiveSmallIntegerField(validators=(MinValueValidator(1), MaxValueValidator(10)))
+    thumbnail = models.ImageField()
+    comm_CH = ('Bathroom', 'Swimming pool', 'Parking',
+               'Wi-Fi', 'Air conditioner', 'Room service',
+               'Breakfast', 'Balcony', 'Refrigerator')
+    commodities = MultiSelectField(choices=zip(comm_CH, comm_CH), max_choices=9, max_length=300)
+    price = models.DecimalField(decimal_places=2, max_digits=8, validators=[MinValueValidator(0)])
 
-class Response:
-    def __init__(self, status, reason, headers=None, body=None):
-        self.status = status
-        self.reason = reason
-        self.headers = headers
-        self.body = body
+    @property
+    def reviews(self):
+        bookings = Booking.objects.filter(room=self)
+        return Review.objects.filter(booking__in=bookings)
 
+    def available(self, start, end):
+        start = datetime.date.fromisoformat(start)
+        end = datetime.date.fromisoformat(end)
+        bookings = (Booking.objects.filter(room=self, status='Active') |
+                    Booking.objects.filter(room=self, status='Awaits'))
+        for book in bookings:
+            if ((start &lt;= book.date_from and end &gt;= book.date_until) or
+                    (book.date_from &lt;= start &lt;= book.date_until) or
+                    (book.date_from &lt;= end &lt;= book.date_until)):
+                return False
+        return True
 
-class MyHTTPServer:
-    # Параметры сервера
-    def __init__(self, host, port, server_name):
-        self._host = host
-        self._port = port
-        self._server_name = server_name
-        self._subjects = {}
+    def get_last_month_guests(self):
+        today = datetime.date.today()
+        month_before = today - datetime.timedelta(days=30)
+        bookings = Booking.objects.filter(room=self, date_until__range=[month_before, today])
+        return [b.guest for b in bookings]
+</code></pre>
+<p><br></p>
+<p><strong>Бронирование</strong> - имеет внешние ключи, относящиеся к Гостю и Комнате.</p>
+<pre><code>class Booking(models.Model):
+    guest = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    status_CH = ('Active', 'Awaits', 'Finished', 'Canceled')
+    status = models.CharField(choices=zip(status_CH, status_CH), max_length=10)
+    date_from = models.DateField()
+    date_until = models.DateField()
 
-    # 1. Запуск сервера на сокете, обработка входящих соединений
-    def serve_forever(self):
-        print("Server running...")
-        serv_sock = socket.socket(
-            socket.AF_INET,
-            socket.SOCK_STREAM)
-
-        try:
-            serv_sock.bind((self._host, self._port))
-            serv_sock.listen()
-            while True:
-                conn, addr = serv_sock.accept()
-                print(f"Connected to a client at {addr}")
-                try:
-                    self.serve_client(conn)
-                except Exception as e:
-                    print('Client serving failed.\nDetails:', e)
-        finally:
-            serv_sock.close()
-
-    # 2. Обработка клиентского подключения
-    def serve_client(self, conn):
-        try:
-            req = self.parse_request(conn)
-            resp = self.handle_request(req)
-            self.send_response(conn, resp)
-        except ConnectionResetError:
-            conn = None
-        except Exception as e:
-            status = 500
-            reason = b'Internal Server Error'
-            body = str(e).encode('utf-8')
-            resp = Response(status, reason,
-                            [('Content-Length', len(body))],
-                            body)
-            self.send_response(conn, resp)
-
-        if conn:
-            conn.close()
-
-    # 3. функция для обработки заголовка http+запроса.
-    # Python, сокет предоставляет возможность создать вокруг него некоторую обертку,
-    # которая предоставляет file object интерфейс. Это дайте возможность построчно обработать запрос.
-    # Заголовок всегда - первая строка.
-    # Первую строку нужно разбить на 3 элемента  (метод + url + версия протокола).
-    # URL необходимо разбить на адрес и параметры
-    # (isu.ifmo.ru/pls/apex/f?p=2143 , где isu.ifmo.ru/pls/apex/f, а p=2143 - параметр p со значением 2143)
-    def parse_request(self, conn):
-        rfile = conn.makefile('rb')
-
-        raw = rfile.readline(MAX_LINE + 1)  # cчитываем первую строку (status line)
-        if len(raw) &gt; MAX_LINE:
-            raise Exception('Request line is too long')
-        req_line = str(raw, 'iso-8859-1').rstrip('\r\n')
-
-        words = req_line.split()
-        if len(words) != 3:  # должно быть 3 части через пробел
-            raise Exception('Incorrect request line')
-        method, url, version = words
-        print('Received request: ', *words)
-        if version != 'HTTP/1.1':
-            raise Exception('Unexpected HTTP version')
-
-        headers = self.parse_headers(rfile)
-        host = headers.get('Host')
-        if not host:
-            raise Exception('Bad request')
-
-        return Request(method, url, version, headers, rfile)
-
-
-    # 4. Функция для обработки headers.
-    # Необходимо прочитать все заголовки после первой строки до появления пустой строки и сохранить их в массив.
-    def parse_headers(self, rfile):
-        headers = []
-        while True:
-            line = rfile.readline(MAX_LINE + 1)
-            if len(line) &gt; MAX_LINE:
-                raise Exception('Header line is too long')
-
-            if line in (b'\r\n', b'\n', b''): # секция заголовков заканчивается пустой строкой
-                break
-
-            headers.append(line.strip())
-            if len(headers) &gt; MAX_HEADERS:
-                raise Exception('Too many headers')
-        decoded_headers = [tuple(header.decode('iso-8859-1').split(': ')) for header in headers]
-        headers_dict = dict(decoded_headers)
-        print('With headers: ', headers_dict)
-        return headers_dict
-
-
-    # 5. Функция для обработки url в соответствии с нужным методом.
-    # В случае данной работы, нужно будет создать набор условий, который обрабатывает GET или POST запрос.
-    # GET запрос должен возвращать данные. POST запрос должен записывать данные на основе переданных параметров.
-    def handle_request(self, req):
-        if req.path == '/':
-            contentType = 'text/html; charset=utf-8'
-            with open("index.html") as index:
-                body = index.read()
-            body = body.encode('utf-8')
-            print('Formed GET-response with body: ', body)
-            headers = [('Content-Type', contentType),
-                       ('Content-Length', len(body))]
-            return Response(200, 'OK', headers, body)
-
-        if req.path == '/grades' and req.method == 'POST':
-            subject = req.query['subject']
-            grade = req.query['grade']
-            print(subject, grade)
-            if subject in self._subjects:
-                self._subjects[subject].append(grade)
-            else:
-                self._subjects[subject] = [grade]
-            contentType = 'text/html; charset=utf-8'
-            body = '&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;'
-            body += f'&lt;h3&gt;Grade {grade} for subject {subject} is registered.&lt;/h3&gt;'
-            body += '&lt;br&gt;&lt;a href="/"&gt;Return to main page&lt;/a&gt;'
-            body += '&lt;/body&gt;&lt;/html&gt;'
-            body = body.encode('utf-8')
-            print('Formed POST-response with body: ', body)
-            headers = [('Content-Type', contentType),
-                       ('Content-Length', len(body))]
-            return Response(200, 'Grade added', headers, body)
-
-        if req.path == '/grades' and req.method == 'GET':
-            subject = req.query['subject']
-            contentType = 'text/html; charset=utf-8'
-            body = '&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;'
-            body += f'&lt;h3&gt;Grades for subject {subject}&lt;/h3&gt;'
-            body += '&lt;ul&gt;'
-            if subject in self._subjects.keys():
-                for grade in self._subjects[subject]:
-                    body += f'&lt;li&gt;{grade}&lt;/li&gt;'
-            else:
-                body += f'&lt;li&gt;No grades yet&lt;/li&gt;'
-            body += '&lt;/ul&gt;'
-            body += '&lt;br&gt;&lt;a href="/"&gt;Return to main page&lt;/a&gt;'
-            body += '&lt;/body&gt;&lt;/html&gt;'
-            body = body.encode('utf-8')
-            print('Formed GET-response with body: ', body)
-            headers = [('Content-Type', contentType),
-                       ('Content-Length', len(body))]
-            return Response(200, 'OK', headers, body)
-
-        raise Exception('Not found')
-
-
-    # 6. Функция для отправки ответа.
-    # Необходимо записать в соединение status line вида HTTP/1.1 &lt;status_code&gt; &lt;reason&gt;.
-    # Затем, построчно записать заголовки и пустую строку, обозначающую конец секции заголовков.
-    def send_response(self, conn, resp):
-        wfile = conn.makefile('wb')
-        status_line = f'HTTP/1.1 {resp.status} {resp.reason}\r\n'
-        wfile.write(status_line.encode('iso-8859-1'))
-
-        if resp.headers:
-            for key, value in resp.headers:
-                header_line = f'{key}: {value}\r\n'
-                wfile.write(header_line.encode('iso-8859-1'))
-
-        wfile.write(b'\r\n')
-
-        if resp.body:
-            wfile.write(resp.body)
-
-        wfile.flush()
-        wfile.close()
-        print('Response sent\n')
-
-
-if __name__ == '__main__':
-    host = sys.argv[1]
-    port = int(sys.argv[2])
-    name = sys.argv[3]
-    serv = MyHTTPServer(host, port, name)
+    @property
+    def total_price(self):
+        days = (self.date_until - self.date_from).days
+        days = days if days != 0 else 1
+        return self.room.price * days
+</code></pre>
+<p><br></p>
+<p><strong>Отзыв</strong> - имеет внешний ключ, относящийся к Бронированию.</p>
+<pre><code>class Review(models.Model):
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    rating_CH = ('1', '2', '3', '4', '5')
+    rating = models.CharField(choices=zip(rating_CH, rating_CH), max_length=1)
+    body = models.TextField()
+</code></pre>
+<p><br>
+<br></p>
+<h2 id="viewspy">Описание контроллеров (views.py)</h2>
+<p><strong>index</strong> - рендерит основную страницу со списком всех отелей.</p>
+<pre><code>def index(request):
     try:
-        serv.serve_forever()
-    except KeyboardInterrupt:
-        pass
+        h = Hotel.objects.order_by('name')
+    except Hotel.DoesNotExist:
+        raise Http404("No hotels available")
+    data = {'hotel_list': h}
+    return render(request, 'index.html', data)
 </code></pre>
 <p><br></p>
-<p><strong>Запуск</strong></p>
-<p><div class="video-container"><iframe src="../media/task5.mp4" style="position:relative;width:100%;height:22.172vw" frameborder="0" allowfullscreen alt="type:video"></iframe></div></p>
+<p><strong>hotel</strong> - рендерит страницу отеля с укзанным id.</p>
+<pre><code>def hotel(request, id):
+    try:
+        h = Hotel.objects.get(pk=id)
+    except Hotel.DoesNotExist:
+        raise Http404("Cannot find this hotel")
+    try:
+        rl = Room.objects.filter(hotel=h)
+    except Room.DoesNotExist:
+        rl = []
+    data = {'hotel': h,
+            'room_list': rl,
+            'guest_list': h.guests}
+    return render(request, 'hotel.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>room</strong> - рендерит страницу комнаты с укзанным id (также содержит логику создания бронирования).</p>
+<pre><code>def room(request, id):
+try:
+    r = Room.objects.get(pk=id)
+except Room.DoesNotExist:
+    raise Http404("Cannot find this room")
+if request.method == 'POST':
+    u = request.user
+    d_f = request.POST.get('from')
+    d_u = request.POST.get('until')
+    if d_f &gt; d_u:
+        messages.info(request, 'Departure should be later than Arrival')
+    elif not r.available(d_f, d_u):
+        messages.info(request, 'Room is booked for these days')
+    else:
+        post_data = {'guest': u, 'room': r, 'date_from': d_f, 'date_until': d_u, 'status': 'Awaits'}
+        f = BookingCreationForm(post_data)
+        f.save()
+        return redirect('/account')
+
+data = {'room': r}
+return render(request, 'room.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>cancelbooking</strong> - изменение статуса бронирования с укзанным id на "Отменено" (доступ только для авторизированных пользователей).</p>
+<pre><code>@login_required(login_url='login')
+def cancelbooking(request, id):
+    try:
+        b = Booking.objects.get(pk=id)
+    except Booking.DoesNotExist:
+        raise Http404("Cannot find this booking")
+    if b.guest != request.user:
+        raise HttpResponseNotAllowed("Only user who made the booking can cancel it")
+    b.status = 'Canceled'
+    b.save(update_fields=['status'])
+    return redirect('/account')
+</code></pre>
+<p><br></p>
+<p><strong>review</strong> - оставить отзыв на бронирование с укзанным id (доступ только для авторизированных пользователей, кому принадлежит бронирование).</p>
+<pre><code>@login_required(login_url='login')
+def review(request, booking_id):
+    try:
+        b = Booking.objects.get(pk=booking_id)
+    except Booking.DoesNotExist:
+        raise Http404("Cannot find this booking")
+    if b.guest != request.user:
+        raise HttpResponseNotAllowed("Only user who made the booking can review it")
+    r = request.POST.get('rating')
+    bod = request.POST.get('body')
+    post_data = {'booking': b, 'rating': r, 'body': bod}
+    f = ReviewCreationForm(post_data)
+    f.save()
+    return redirect('/account')
+</code></pre>
+<p><br></p>
+<p><strong>register_page</strong> - производит регистрацию пользователя и рендерит ее страницу.</p>
+<pre><code>def register_page(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    f = GuestCreationForm()
+
+    if request.method == 'POST':
+        f = GuestCreationForm(request.POST, request.FILES)
+        try:
+            f.save()
+            return redirect('login')
+        except ValueError:
+            for err in dict(f.errors).values():
+                messages.info(request, err)
+
+    data = {'form': f}
+    return render(request, 'register.html', data)
+</code></pre>
+<p><br></p>
+<p><strong>login_page</strong> - производит авторизацию пользователя и рендерит ее страницу.</p>
+<pre><code>def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+
+    if request.method == 'POST':
+        u = request.POST.get('username')
+        p = request.POST.get('password')
+        Guest = get_user_model()
+        try:
+            user = Guest.objects.get(username=u)
+            if check_password(p, user.password) or p == user.password:
+                login(request, user)
+                return redirect('/', user)
+            else:
+                messages.info(request, 'Incorrect password')
+        except Guest.DoesNotExist:
+            messages.info(request, 'Incorrect username')
+    return render(request, 'login.html')
+</code></pre>
+<p><br></p>
+<p><strong>logout_user</strong> - производит выход из аккаунта текущего пользователя.</p>
+<pre><code>@login_required(login_url='login')
+def logout_user(request):
+    logout(request)
+    return redirect('/')
+</code></pre>
+<p><br></p>
+<p><strong>account</strong> - рендерит страницу аккаунта текущего пользователя (доступ только для авторизированных пользователей).</p>
+<pre><code>@login_required(login_url='login')
+def account(request):
+    u = request.user
+    data = {'user': u}
+    return render(request, 'account.html', data)
+</code></pre>
 <p><br>
 <br></p>
-<h2 id="_1">Выводы</h2>
-<p>В рамках данной лабораторной работы были получены навыки реализации web-серверов и
-использования сокетов при помощи языка программирования Python. 
-Я освежила знания о модели клиент-серверного взаимодействия. 
-Познакомилась с библиотеками socket и threading 
-и со стоящими за ними концепциями сокетов и потоков. 
-Разобралась со структурой HTTP-запроса, его функцией 
-и процессами его формирования и обработки.
-Полученные знания можно применять как и для создания собственных веб-приложений,
-так и для общего понимания, что происходит, когда мы пользуемся интернетом 
-и, например, самостоятельного устранения возникающих  ошибок.</p></div></div>
+<h2 id="urlspy">Описание роутеров (urls.py)</h2>
+<p>Прописаны пути для каждого контроллера из файла views.py. Отдельно прописан путь до директории с медиа файлами (изображениями).</p>
+<pre><code>urlpatterns = [
+    path('', views.index),
+    path('hotel/&lt;id&gt;/', views.hotel, name='hotel'),
+    path('room/&lt;id&gt;/', views.room, name='room'),
+    path('cancelbooking/&lt;id&gt;/', views.cancelbooking, name='cancelbooking'),
+    path('review/&lt;booking_id&gt;/', views.review, name='review'),
+    path('account/', views.account, name='account'),
+    path('register/', views.register_page, name='register'),
+    path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_user, name='logout')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+</code></pre>
+<p><br></p>
+<p><br>
+<br></p>
+<h2 id="_1">Работа программы</h2>
+<p><strong>Главная страница</strong></p>
+<p><img alt="Index page" src="../media/index1.png">
+<img alt="Index page" src="../media/index2.png">
+<img alt="Index page" src="../media/index3.png"></p>
+<p><strong>Cтраница отеля</strong></p>
+<p><img alt="Hotel page" src="../media/hotel1.png">
+<img alt="Hotel page" src="../media/hotel2.png">
+<img alt="Hotel page" src="../media/hotel3.png"></p>
+<p><strong>Cтраница комнаты</strong></p>
+<p><img alt="Room page" src="../media/room1.png">
+<img alt="Room page" src="../media/room2.png">
+<img alt="Room page" src="../media/room3.png"></p>
+<p><strong>Cтраница пользователя</strong></p>
+<p><img alt="User page" src="../media/user1.png">
+<img alt="User page" src="../media/user2.png">
+<img alt="User page" src="../media/user3.png">
+<br>
+<br></p>
+<h2 id="_2">Выводы</h2>
+<p>В рамках данной лабораторной работы были получены навыки работы с веб-фреймворком Django. 
+Реализован простой сайт по варианту 1 - Список отелей.
+Познакомилась с моделью MVC и ее реализации в Django.<br>
+Разобралась со структурой Django-проекта; как взаимодействуют модели, контроллеры и роутеры.
+Дополнительно углубилась в создание user-friendly html-шаблонов для своего приложения.
+Полученные знания можно применять для создания собственных веб-приложений на Django.
+Более того, понимание модели MVC потенциально упрощает работу и с другими web-фреймворками.</p></div></div>
             </div>
         </div>
 

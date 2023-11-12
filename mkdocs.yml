@@ -5,3 +5,7 @@ nav:
   - 'Главная': 'index.md'
   - 'ЛР 1': '1.md'
   - 'ЛР 2': '2.md'
+  - 'ЛР 3':
+      - "Описание": 3/description.md
+      - "Эндпоинты": 3/endpoints.md
+      - "Авторизация": 3/authorization.md
